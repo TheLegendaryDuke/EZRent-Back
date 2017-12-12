@@ -33,7 +33,7 @@ public class UserService {
         user.setEmail(userFormInput.getEmail());
         user.setName(userFormInput.getName());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        //user.setLastLogin(userFormInput.getLastLogin());
+        user.setLastLogin(userFormInput.getLastLogin());
         userRepository.save(user);
         return user;
     }

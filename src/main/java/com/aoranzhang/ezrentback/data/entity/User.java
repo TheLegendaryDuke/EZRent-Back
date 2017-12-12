@@ -19,9 +19,9 @@ public class User extends AbstractPersistentObject {
     @Column(name = "password")
     private String password;
 
-//    @Column(name = "last_login_date", columnDefinition = "timestamp with time zone")
-//    @Temporal(TemporalType.TIMESTAMP)
-//    private Date lastLogin;
+    @Column(name = "last_login_date", columnDefinition = "timestamp with time zone")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLogin;
 
 //    @OneToMany(
 //            mappedBy = "owner",
@@ -48,13 +48,13 @@ public class User extends AbstractPersistentObject {
         this.password = password;
     }
 
-//    public Date getLastLogin() {
-//        return lastLogin;
-//    }
-//
-//    public void setLastLogin(Date lastLogin) {
-//        this.lastLogin = lastLogin;
-//    }
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 
     public String getName() {
         return name;
