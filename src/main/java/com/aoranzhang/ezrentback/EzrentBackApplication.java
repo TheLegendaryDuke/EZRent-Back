@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.session.data.redis.config.ConfigureRedisAction;
 
 @SpringBootApplication
 public class EzrentBackApplication {
@@ -52,5 +53,10 @@ public class EzrentBackApplication {
                 .apiKey(googleApiKey)
                 .build();
         return context;
+    }
+
+    @Bean
+    public static ConfigureRedisAction configureRedisAction() {
+        return ConfigureRedisAction.NO_OP;
     }
 }
