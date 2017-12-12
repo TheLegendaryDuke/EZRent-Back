@@ -23,22 +23,22 @@ public class User extends AbstractPersistentObject {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLogin;
 
-//    @OneToMany(
-//            mappedBy = "owner",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true,
-//            fetch = FetchType.EAGER
-//    )
-//    @JsonIgnore
-//    private Set<Building> buildings;
-//
-//    public Set<Building> getBuildings() {
-//        return buildings;
-//    }
-//
-//    public void setBuildings(Set<Building> buildings) {
-//        this.buildings = buildings;
-//    }
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    @JsonIgnore
+    private Set<Building> buildings;
+
+    public Set<Building> getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(Set<Building> buildings) {
+        this.buildings = buildings;
+    }
 
     public String getPassword() {
         return password;
