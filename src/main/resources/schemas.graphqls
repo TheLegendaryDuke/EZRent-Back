@@ -1,5 +1,6 @@
 type Query {
-    user(id: String!): User
+    cities: [City!]!
+    user: User
 }
 
 scalar Date
