@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.UsersConnectionRepository;
@@ -51,18 +53,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login**", "/signin/**", "/register/**", "/index", "/css/**", "/images/**", "/scripts/**", "/fonts/**", "/graphiql/**", "/graphql/**").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/login**", "/signin/**", "/register/**", "/graphiql/**", "/graphql/**").permitAll()
+                .anyRequest().hasAuthority("admin")
                 .and()
                 .formLogin()
-                .loginPage("/login").defaultSuccessUrl("/")
+                .loginPage("/login")
+                .successHandler(new RestAuthenticationSuccessHandler())
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .permitAll()
                 .and().logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/").and().exceptionHandling()
-                .accessDeniedPage("/access-denied");
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
     }
 
     @Override
