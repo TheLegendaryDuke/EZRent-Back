@@ -1,6 +1,7 @@
 package com.aoranzhang.ezrentback.spring.security;
 
 import com.aoranzhang.ezrentback.service.UserService;
+import com.aoranzhang.ezrentback.spring.social.RestProviderSignInController;
 import com.aoranzhang.ezrentback.spring.social.SocialSignInAdapter;
 import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 @EnableWebSecurity
@@ -43,6 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${spring.queries.users-query}")
     private String usersQuery;
 
+    @Value("${spring.queries.authorities-query}")
+    private String authoritiesQuery;
+
+    @Value("${application.URL}")
+    private String applicationURL;
+
     @Autowired
     private ConnectionFactoryLocator connectionFactoryLocator;
 
@@ -50,26 +58,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UsersConnectionRepository usersConnectionRepository;
 
     @Autowired
-    Environment environment;
+    private Environment environment;
+
+    @Autowired
+    private HttpSession httpSession;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        SimpleUrlLogoutSuccessHandler handler = new SimpleUrlLogoutSuccessHandler();
+        handler.setUseReferer(true);
+
         http
                 .csrf().disable()
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login**", "/signin/**", "/register/**", "/graphiql/**", "/graphql/**").permitAll()
-                .anyRequest().hasAuthority("admin")
+                .antMatchers("/login", "/login/**", "/register/**", "/graphiql/**", "/graphql/**", "/user").permitAll()
+                .anyRequest().denyAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .successHandler(new RestAuthenticationSuccessHandler())
+                .successHandler(new RestAuthenticationSuccessHandler(httpSession, userService))
                 .failureHandler(new SimpleUrlAuthenticationFailureHandler())
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .permitAll()
                 .and().logout()
+                .logoutSuccessHandler(handler)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
     }
 
@@ -79,6 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.
                 jdbcAuthentication()
                 .usersByUsernameQuery(usersQuery)
+                .authoritiesByUsernameQuery(authoritiesQuery)
                 .dataSource(dataSource)
                 .passwordEncoder(bCryptPasswordEncoder);
     }
@@ -92,11 +109,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public ProviderSignInController providerSignInController() {
-        ProviderSignInController providerSignInController = new ProviderSignInController(
+        RestProviderSignInController providerSignInController = new RestProviderSignInController(
                 connectionFactoryLocator,
                 usersConnectionRepository,
-                new SocialSignInAdapter(userService));
-        providerSignInController.setSignUpUrl("/register");
+                new SocialSignInAdapter(userService, httpSession));
+        providerSignInController.setSignUpUrl(applicationURL+"/register");
+        providerSignInController.setPostSignInUrl(applicationURL);
         return providerSignInController;
     }
 

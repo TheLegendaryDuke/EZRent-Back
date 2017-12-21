@@ -1,7 +1,6 @@
 package com.aoranzhang.ezrentback.service;
 
 import com.aoranzhang.ezrentback.data.entity.User;
-import com.aoranzhang.ezrentback.data.entity.UserFormInput;
 import com.aoranzhang.ezrentback.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,18 +23,6 @@ public class UserService {
     public void saveUser(User user) throws DataIntegrityViolationException {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-    }
-
-    @Transactional
-    public User saveUser(UserFormInput userFormInput) throws DataIntegrityViolationException {
-        User user = new User();
-        user.setPassword(userFormInput.getPassword());
-        user.setEmail(userFormInput.getEmail());
-        user.setName(userFormInput.getName());
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setLastLogin(userFormInput.getLastLogin());
-        userRepository.save(user);
-        return user;
     }
 
     @Transactional
