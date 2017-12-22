@@ -113,7 +113,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 connectionFactoryLocator,
                 usersConnectionRepository,
                 new SocialSignInAdapter(userService, httpSession));
-        providerSignInController.setSignUpUrl(applicationURL+"/register");
+        providerSignInController.setSignUpUrl("/register");
         providerSignInController.setPostSignInUrl(applicationURL);
         return providerSignInController;
     }

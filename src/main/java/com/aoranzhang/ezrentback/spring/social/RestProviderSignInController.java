@@ -261,7 +261,7 @@ public class RestProviderSignInController extends ProviderSignInController {
         if (userIds.size() == 0) {
             ProviderSignInAttempt signInAttempt = new ProviderSignInAttempt(connection);
             sessionStrategy.setAttribute(request, ProviderSignInAttempt.SESSION_ATTRIBUTE, signInAttempt);
-            return externalRedirect(signUpUrl);
+            return redirect(signUpUrl);
         } else if (userIds.size() == 1) {
             usersConnectionRepository.createConnectionRepository(userIds.get(0)).updateConnection(connection);
             String originalUrl = signInAdapter.signIn(userIds.get(0), connection, request);

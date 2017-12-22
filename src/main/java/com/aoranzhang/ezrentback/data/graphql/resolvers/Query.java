@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -32,6 +34,19 @@ public class Query implements GraphQLQueryResolver {
 
     public Set<City> cities() {
         return cityService.getAllCities();
+    }
+
+    public List<String> socialInfo() {
+        if(!((Boolean) httpSession.getAttribute("onGoingRegister"))) {
+            return null;
+        }
+        List<String> list = new ArrayList();
+        list.add((String) httpSession.getAttribute("newEmail"));
+        list.add((String) httpSession.getAttribute("newName"));
+
+        httpSession.setAttribute("onGoingRegister", false);
+
+        return list;
     }
 
 }

@@ -1,29 +1,27 @@
 package com.aoranzhang.ezrentback.spring.security;
 
-import com.aoranzhang.ezrentback.data.entity.User;
-import com.aoranzhang.ezrentback.service.UserService;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.web.ProviderSignInUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.ConstraintViolationException;
-import java.util.Date;
-import java.util.HashSet;
 
-@RestController
+@Controller(value = "register")
 public class RegisterController {
+
+    @Value("${application.URL}")
+    private String applicationURL;
+
+    @Autowired
+    private HttpSession httpSession;
 
     @Autowired
     ConnectionFactoryLocator connectionFactoryLocator;
@@ -31,42 +29,18 @@ public class RegisterController {
     @Autowired
     private UsersConnectionRepository usersConnectionRepository;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private HttpSession httpSession;
-
-    private static final transient org.slf4j.Logger LOG = LoggerFactory.getLogger(RegisterController.class);
-
-    @PostMapping("/register")
-    public User register(HttpServletRequest request, @RequestParam(name = "username") String username, @RequestParam(name = "email") String email, @RequestParam(name = "password") String password) {
+    @GetMapping
+    public RedirectView postSocial(WebRequest request) {
         ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils(connectionFactoryLocator, usersConnectionRepository);
-        User user = new User();
-        user.setLastLogin(new Date());
-        user.setName(username);
-        user.setEmail(email);
-        user.setPassword(password);
-        try {
-            userService.saveUser(user);
-        }catch (DataIntegrityViolationException exception) {
-            if(exception.getCause() instanceof ConstraintViolationException) {
-                //TODO: handle this
-                return null;
-            }
+
+        Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
+
+        if(connection != null) {
+            UserProfile userProfile = connection.fetchUserProfile();
+            httpSession.setAttribute("onGoingRegister", true);
+            httpSession.setAttribute("newEmail", userProfile.getEmail());
+            httpSession.setAttribute("newName", userProfile.getName());
         }
-
-        try {
-            request.login(user.getEmail(), user.getPassword());
-        }catch (ServletException e) {
-            LOG.error("Login failed:", e);
-        }
-
-        providerSignInUtils.doPostSignUp(user.getEmail(), RequestContextHolder.getRequestAttributes());
-
-        httpSession.setAttribute("userEmail", user.getEmail());
-        httpSession.setAttribute("userName", user.getName());
-
-        return user;
+        return new RedirectView(applicationURL+"/registerWithSocial");
     }
 }
