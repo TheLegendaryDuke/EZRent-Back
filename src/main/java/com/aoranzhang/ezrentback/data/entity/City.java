@@ -16,7 +16,7 @@ public class City extends AbstractPersistentObject{
             mappedBy = "city",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JsonIgnore
     private Set<Building> buildings;

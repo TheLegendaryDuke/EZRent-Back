@@ -1,7 +1,9 @@
 package com.aoranzhang.ezrentback.data.graphql.resolvers;
 
+import com.aoranzhang.ezrentback.data.entity.Building;
 import com.aoranzhang.ezrentback.data.entity.City;
 import com.aoranzhang.ezrentback.data.entity.User;
+import com.aoranzhang.ezrentback.service.BuildingService;
 import com.aoranzhang.ezrentback.service.CityService;
 import com.aoranzhang.ezrentback.service.UserService;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
@@ -23,6 +25,9 @@ public class Query implements GraphQLQueryResolver {
 
     @Autowired
     private CityService cityService;
+
+    @Autowired
+    private BuildingService buildingService;
 
     public User user() {
         String user = (String) httpSession.getAttribute("userEmail");
@@ -49,4 +54,7 @@ public class Query implements GraphQLQueryResolver {
         return list;
     }
 
+    public Set<Building> buildings(String city) {
+        return buildingService.listByCity(cityService.findCityByName(city));
+    }
 }
