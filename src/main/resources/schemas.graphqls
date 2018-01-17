@@ -3,6 +3,7 @@ type Query {
     user: User
     socialInfo: [String!]
     buildings(city: String!): [Building!]!
+    properties(email: String!): [Building!]!
 }
 
 type Mutation {
