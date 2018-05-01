@@ -44,4 +44,8 @@ public class Query implements GraphQLQueryResolver {
     public Set<Building> buildings(String city) {
         return buildingService.listByCity(cityService.findCityByName(city));
     }
+
+    public Set<Building> properties(String email) {
+        return buildingService.listByOwner(userService.getUserByEmail(email));
+    }
 }
