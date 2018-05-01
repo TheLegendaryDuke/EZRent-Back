@@ -1,7 +1,6 @@
 type Query {
     cities: [City!]!
     user: User
-    socialInfo: [String!]
     buildings(city: String!): [Building!]!
 }
 

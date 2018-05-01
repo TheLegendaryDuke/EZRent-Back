@@ -34,11 +34,19 @@ public class Mutation implements GraphQLMutationResolver {
     private HttpSession httpSession;
 
     public User register(String email, String username, String password) {
+
         User user = new User();
+
+        User existing = userService.getUserByEmail(email);
+        if(existing != null) {
+            return null;
+        }
+
         user.setEmail(email);
         user.setName(username);
         user.setPassword(password);
         user.setLastLogin(new Date());
+
         try {
             userService.saveUser(user);
             ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils(connectionFactoryLocator, usersConnectionRepository);

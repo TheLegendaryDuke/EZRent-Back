@@ -34,13 +34,15 @@ public class RegisterController {
         ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils(connectionFactoryLocator, usersConnectionRepository);
 
         Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
+        RedirectView redirectView = new RedirectView(applicationURL+"/registerWithSocial");
 
         if(connection != null) {
             UserProfile userProfile = connection.fetchUserProfile();
-            httpSession.setAttribute("onGoingRegister", true);
-            httpSession.setAttribute("newEmail", userProfile.getEmail());
-            httpSession.setAttribute("newName", userProfile.getName());
+
+            redirectView.addStaticAttribute("email", userProfile.getEmail());
+            redirectView.addStaticAttribute("name", userProfile.getName());
         }
-        return new RedirectView(applicationURL+"/registerWithSocial");
+
+        return redirectView;
     }
 }

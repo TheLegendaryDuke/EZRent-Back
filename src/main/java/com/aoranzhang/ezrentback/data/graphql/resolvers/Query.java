@@ -41,19 +41,6 @@ public class Query implements GraphQLQueryResolver {
         return cityService.getAllCities();
     }
 
-    public List<String> socialInfo() {
-        if(!((Boolean) httpSession.getAttribute("onGoingRegister"))) {
-            return null;
-        }
-        List<String> list = new ArrayList();
-        list.add((String) httpSession.getAttribute("newEmail"));
-        list.add((String) httpSession.getAttribute("newName"));
-
-        httpSession.setAttribute("onGoingRegister", false);
-
-        return list;
-    }
-
     public Set<Building> buildings(String city) {
         return buildingService.listByCity(cityService.findCityByName(city));
     }
