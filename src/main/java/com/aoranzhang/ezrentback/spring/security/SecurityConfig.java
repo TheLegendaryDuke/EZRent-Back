@@ -58,9 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UsersConnectionRepository usersConnectionRepository;
 
     @Autowired
-    private Environment environment;
-
-    @Autowired
     private HttpSession httpSession;
 
     @Override
@@ -74,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login", "/login/**", "/register/**", "/graphiql/**", "/graphql/**", "/user").permitAll()
+                .antMatchers("/login", "/login/**", "/register/**", "/graphiql/**", "/graphql/**", "/user", "/vendor/**").permitAll()
                 .anyRequest().denyAll()
                 .and()
                 .formLogin()
