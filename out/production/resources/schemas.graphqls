@@ -1,0 +1,76 @@
+type Query {
+    cities: [City!]!
+    user: User
+    buildings(city: String!): [Building!]!
+    properties(email: String!): [Building!]!
+}
+
+type Mutation {
+    register(email: String!, username: String!, password: String!): User
+}
+
+scalar Date
+
+enum RoomType {
+    BEDROOM,
+    WASHROOM,
+    KITCHEN,
+    MASTER
+}
+
+type User {
+    id: String!
+    version: Int!
+    name: String!
+    email: String!
+    password: String!
+    lastLogin: Date!
+    buildings: [Building!]!
+}
+
+type Building {
+    id: String!
+    version: Int!
+    address: String!
+    city: City!
+    postalCode: String!
+    owner: User!
+    longitude: Float!
+    latitude: Float!
+    verified: Boolean!
+    suites: [Suite!]!
+}
+
+type City {
+    id: String!
+    version: Int!
+    name: String!
+    buildings: [Building!]!
+    longitude: Float!
+    latitude: Float!
+}
+
+type Suite {
+    id: String!
+    version: Int!
+    building: Building!
+    rooms: [Room!]!
+    floor: String!
+    available: Int!
+    name: String!
+    rent: Int
+    rentNegotiable: Boolean!
+}
+
+type Room {
+    id: String!
+    version: Int!
+    suite: Suite!
+    name: String!
+    comment: String!
+    roomType: RoomType!
+    rent: Int
+    available: Int!
+    forRent: Boolean!
+    publicSpace: Boolean!
+}
