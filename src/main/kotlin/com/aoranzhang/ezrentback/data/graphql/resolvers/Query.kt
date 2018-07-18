@@ -7,6 +7,8 @@ import com.aoranzhang.ezrentback.service.BuildingService
 import com.aoranzhang.ezrentback.service.CityService
 import com.aoranzhang.ezrentback.service.UserService
 import com.coxautodev.graphql.tools.GraphQLQueryResolver
+import org.apache.commons.logging.Log
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -14,6 +16,8 @@ import javax.servlet.http.HttpSession
 
 @Component
 class Query : GraphQLQueryResolver {
+    val LOGGER = LoggerFactory.getLogger(Query::class.java)!!
+
     @Autowired
     private val httpSession: HttpSession? = null
 
@@ -28,9 +32,12 @@ class Query : GraphQLQueryResolver {
 
     fun user(): User? {
         val user = httpSession!!.getAttribute("userEmail") as String?
-        return if (user != null && user.length != 0) {
+        return if (user != null && user.isNotEmpty()) {
             userService!!.getUserByEmail(user)
-        } else null
+        } else {
+            LOGGER.debug("There is no user info in session storage")
+            null
+        }
     }
 
     fun cities(): Set<City> {

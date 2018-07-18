@@ -22,9 +22,9 @@ class RestAuthenticationSuccessHandler(private val httpSession: HttpSession, pri
             response: HttpServletResponse,
             authentication: Authentication) {
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.status = HttpServletResponse.SC_OK;
 
-        val email = (authentication.principal as User).email
+        val email = (authentication.principal as org.springframework.security.core.userdetails.User).username
 
         httpSession.setAttribute("userEmail", email)
         httpSession.setAttribute("userName", userService.getUserByEmail(email)?.name)
