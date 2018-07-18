@@ -10,22 +10,24 @@ import java.util.Date
 @Table(name = "app_user")
 class User : AbstractPersistentObject {
 
-    @Column(name = "roomType")
-    val name: String
+    @Column(name = "username")
+    var name: String = ""
 
     @Column(name = "email", unique = true)
-    val email: String
+    var email: String = ""
 
     @Column(name = "password")
-    var password: String
+    var password: String = ""
 
     @Column(name = "last_login_date", columnDefinition = "timestamp with time zone")
     @Temporal(TemporalType.TIMESTAMP)
-    val lastLogin: Date
+    var lastLogin: Date = Date()
 
     @OneToMany(mappedBy = "owner", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
-    val buildings: Set<Building>
+    var buildings: Set<Building> = HashSet()
+
+    constructor(): super() {}
 
     constructor(id: String, version: Int, name: String, email: String, password: String, lastLogin: Date, buildings: Set<Building>) : super(id, version) {
         this.name = name
@@ -50,4 +52,6 @@ class User : AbstractPersistentObject {
         this.lastLogin = user.lastLogin
         this.buildings = user.buildings
     }
+
+    constructor(id: String, version: Int) : super(id, version)
 }

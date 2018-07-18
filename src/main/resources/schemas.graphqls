@@ -56,10 +56,10 @@ type Suite {
     building: Building!
     rooms: [Room!]!
     floor: String!
-    availability: Int!
+    available: Int!
     name: String!
     rent: Int
-    negotiable: Boolean!
+    rentNegotiable: Boolean!
 }
 
 type Room {

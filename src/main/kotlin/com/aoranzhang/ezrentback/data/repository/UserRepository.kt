@@ -8,5 +8,5 @@ import org.springframework.data.repository.CrudRepository
 // CRUD refers Create, Read, Update, Delete
 
 interface UserRepository : CrudRepository<User, String> {
-    fun findByEmail(email: String): User
+    fun findByEmail(email: String): User?
 }

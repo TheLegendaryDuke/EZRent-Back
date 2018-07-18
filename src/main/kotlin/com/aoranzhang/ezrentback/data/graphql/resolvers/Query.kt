@@ -27,8 +27,8 @@ class Query : GraphQLQueryResolver {
     private val buildingService: BuildingService? = null
 
     fun user(): User? {
-        val user = httpSession!!.getAttribute("userEmail") as String
-        return if (user.length != 0) {
+        val user = httpSession!!.getAttribute("userEmail") as String?
+        return if (user != null && user.length != 0) {
             userService!!.getUserByEmail(user)
         } else null
     }

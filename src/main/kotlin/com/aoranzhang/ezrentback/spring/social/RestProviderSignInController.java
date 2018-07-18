@@ -59,9 +59,6 @@ public class RestProviderSignInController extends ProviderSignInController {
 
     private String applicationUrl;
 
-    @Value("${application.URL}")
-    private String applicationURL;
-
     private String signInUrl = "/signin";
 
     private String signUpUrl = "/signup";
