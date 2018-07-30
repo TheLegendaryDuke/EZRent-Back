@@ -7,6 +7,8 @@ import org.springframework.social.connect.ConnectionFactoryLocator
 import org.springframework.social.connect.UserProfile
 import org.springframework.social.connect.UsersConnectionRepository
 import org.springframework.social.connect.web.ProviderSignInUtils
+import org.springframework.social.facebook.api.Facebook
+import org.springframework.social.facebook.api.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -39,10 +41,15 @@ class RegisterController {
         val redirectView = RedirectView(applicationURL!! + "/registerWithSocial")
 
         if (connection != null) {
-            val userProfile = connection.fetchUserProfile()
-
-            redirectView.addStaticAttribute("email", userProfile.getEmail())
-            redirectView.addStaticAttribute("roomType", userProfile.getName())
+            if(connection.api is Facebook) {
+                val userProfile = (connection.api as Facebook).fetchObject("me", User::class.java, "id", "email", "name")
+                redirectView.addStaticAttribute("email", userProfile.email)
+                redirectView.addStaticAttribute("name", userProfile.name)
+            }else {
+                val userProfile = connection.fetchUserProfile()
+                redirectView.addStaticAttribute("email", userProfile.email)
+                redirectView.addStaticAttribute("name", userProfile.name)
+            }
         }
 
         return redirectView
