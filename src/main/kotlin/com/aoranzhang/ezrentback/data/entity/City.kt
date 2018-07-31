@@ -7,14 +7,17 @@ import javax.persistence.*
 @Entity
 @Table(name = "city")
 class City : AbstractPersistentObject {
-    val name: String
+    var name: String = ""
 
-    val longitude: Double
-    val latitude: Double
+    var longitude: Double = 0.0
+    var latitude: Double = 0.0
 
     @OneToMany(mappedBy = "city", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
-    val buildings: Set<Building>
+    var buildings: Set<Building> = HashSet()
+
+
+    constructor() : super() {}
 
     constructor(city: City) : super(city.id, city.version) {
         this.name = city.name
@@ -29,4 +32,5 @@ class City : AbstractPersistentObject {
         this.latitude = latitude
         this.buildings = buildings
     }
+
 }
