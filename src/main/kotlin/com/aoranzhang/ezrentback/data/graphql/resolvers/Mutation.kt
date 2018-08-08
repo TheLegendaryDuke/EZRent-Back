@@ -1,6 +1,12 @@
 package com.aoranzhang.ezrentback.data.graphql.resolvers
 
+import com.aoranzhang.ezrentback.data.entity.Building
+import com.aoranzhang.ezrentback.data.entity.Room
+import com.aoranzhang.ezrentback.data.entity.Suite
 import com.aoranzhang.ezrentback.data.entity.User
+import com.aoranzhang.ezrentback.service.BuildingService
+import com.aoranzhang.ezrentback.service.RoomService
+import com.aoranzhang.ezrentback.service.SuiteService
 import com.aoranzhang.ezrentback.service.UserService
 import com.coxautodev.graphql.tools.GraphQLMutationResolver
 import com.google.common.collect.ImmutableSet
@@ -21,7 +27,16 @@ import java.util.HashSet
 @Component
 class Mutation : GraphQLMutationResolver {
     @Autowired
-    private val userService: UserService? = null
+    private lateinit var userService: UserService
+
+    @Autowired
+    private lateinit var roomService: RoomService
+
+    @Autowired
+    private lateinit var suiteService: SuiteService
+
+    @Autowired
+    private lateinit var buildingService: BuildingService
 
     @Autowired
     internal var connectionFactoryLocator: ConnectionFactoryLocator? = null
@@ -58,5 +73,17 @@ class Mutation : GraphQLMutationResolver {
         }
 
         return user
+    }
+
+    fun updateRoom(room: Room): Room? {
+        return roomService.saveRoom(room)
+    }
+
+    fun updateSuite(suite: Suite): Suite? {
+        return suiteService.saveSuite(suite)
+    }
+
+    fun updateBuilding(building: Building): Building? {
+        return buildingService.save(building)
     }
 }

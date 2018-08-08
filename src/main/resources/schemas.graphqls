@@ -7,6 +7,9 @@ type Query {
 
 type Mutation {
     register(email: String!, username: String!, password: String!): User
+    updateRoom(room: RoomInput!): Room
+    updateSuite(suite: SuiteInput!): Suite
+    updateBuilding(building: BuildingInput!): Building
 }
 
 scalar Date
@@ -41,6 +44,19 @@ type Building {
     suites: [Suite!]!
 }
 
+input BuildingInput {
+    id: String!
+    version: Int!
+    address: String!
+    city: String!
+    postalCode: String!
+    owner: String!
+    longitude: Float!
+    latitude: Float!
+    verified: Boolean!
+    suites: [String!]!
+}
+
 type City {
     id: String!
     version: Int!
@@ -62,6 +78,18 @@ type Suite {
     rentNegotiable: Boolean!
 }
 
+input SuiteInput {
+    id: String!
+    version: Int!
+    building: String!
+    rooms: [String!]!
+    floor: String!
+    available: Int!
+    name: String!
+    rent: Int
+    rentNegotiable: Boolean!
+}
+
 type Room {
     id: String!
     version: Int!
@@ -71,6 +99,17 @@ type Room {
     roomType: RoomType!
     rent: Int
     available: Int!
-    forRent: Boolean!
+    publicSpace: Boolean!
+}
+
+input RoomInput {
+    id: String!
+    version: Int!
+    suite: String!
+    name: String!
+    comment: String!
+    roomType: RoomType!
+    rent: Int
+    available: Int!
     publicSpace: Boolean!
 }

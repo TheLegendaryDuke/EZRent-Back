@@ -10,20 +10,14 @@ import java.util.*
 @Service
 class SuiteService {
     @Autowired
-    private val suiteRepository: SuiteRepository? = null
+    private lateinit var suiteRepository: SuiteRepository
 
     @Transactional
-    fun saveSuite(suite: Suite) {
-        val existing = suiteRepository!!.findById(suite.id)
-        if(existing.isPresent) {
-            existing.get().copy(suite)
-            suiteRepository.save(existing.get())
-        } else {
-            suiteRepository.save(suite)
-        }
+    fun saveSuite(suite: Suite) : Suite? {
+        return suiteRepository.save(suite)
     }
 
     fun findSuite(id: String): Optional<Suite> {
-        return suiteRepository!!.findById(id)
+        return suiteRepository.findById(id)
     }
 }

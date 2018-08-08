@@ -9,15 +9,10 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class RoomService {
     @Autowired
-    private val roomRepository: RoomRepository? = null
+    private lateinit var roomRepository: RoomRepository
 
     @Transactional
-    fun saveRoom(room: Room): Room {
-        val existing = roomRepository!!.findById(room.id)
-        if (existing.isPresent) {
-            existing.get().copy(room)
-            return roomRepository.save(existing.get())
-        }
+    fun saveRoom(room: Room): Room? {
         return roomRepository.save(room)
     }
 }

@@ -12,23 +12,25 @@ class Suite : AbstractPersistentObject {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "building", nullable = false)
-    var building: Building
+    var building: Building? = null
 
     @OneToMany(mappedBy = "suite", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
-    var rooms: Set<Room>
+    var rooms: Set<Room> = HashSet()
 
-    var floor: String
-
-    @NotNull
-    var available: Int
-
-    var name: String
+    var floor: String = ""
 
     @NotNull
-    var rent: Int
+    var available: Int = 0
 
-    var isRentNegotiable: Boolean
+    var name: String = ""
+
+    @NotNull
+    var rent: Int = 0
+
+    var isRentNegotiable: Boolean = false
+
+    constructor(): super() {}
 
     constructor(building: Building, rooms: Set<Room>, floor: String, available: Int = 1, name: String, rent: Int, isRentNegotiable: Boolean = true) : super() {
         this.building = building
