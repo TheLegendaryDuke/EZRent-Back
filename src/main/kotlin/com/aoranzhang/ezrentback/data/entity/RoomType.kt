@@ -2,19 +2,19 @@ package com.aoranzhang.ezrentback.data.entity
 
 import com.fasterxml.jackson.annotation.JsonValue
 
-enum class RoomType constructor(val roomType: String) {
-    BEDROOM("bedroom"),
-    WASHROOM("washroom"),
-    KITCHEN("kitchen"),
-    MASTER("master bedroom");
+enum class RoomType {
+    BEDROOM,
+    WASHROOM,
+    KITCHEN,
+    MASTER;
 
     @JsonValue
     fun type(): String {
-        return this.roomType
+        return this.name
     }
 
     override fun toString(): String {
-        return this.roomType
+        return this.name
     }
 
     companion object {

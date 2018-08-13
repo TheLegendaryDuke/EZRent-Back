@@ -14,7 +14,7 @@ import java.util.*
 @Service
 class BuildingService {
     @Autowired
-    private val buildingRepository: BuildingRepository? = null
+    private lateinit var buildingRepository: BuildingRepository
 
     @Autowired
     private val userRepository: UserRepository? = null
@@ -24,14 +24,14 @@ class BuildingService {
     }
 
     @Transactional
-    fun save(building: Building) {
+    fun save(building: Building) : Building {
 //        if (building.owner != null) {
 //            val owner = userRepository!!.findByEmail(building.owner.email!!)
 //            if (owner != null) {
 //                building.setOwner(owner)
 //            }
 //        }
-        buildingRepository!!.save(building)
+        return buildingRepository.save(building)
     }
 
     fun listByOwner(owner: User): Set<Building> {

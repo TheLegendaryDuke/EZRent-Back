@@ -10,28 +10,25 @@ class Room : AbstractPersistentObject {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "suite", nullable = false)
-    var suite: Suite
+    var suite: Suite? = null
 
-    var name: String
+    var name: String = ""
 
-    var comment: String
+    var comment: String = ""
 
     @Enumerated(value = EnumType.STRING)
-    var roomType: RoomType
+    var roomType: RoomType? = null
 
     @NotNull
-    var rent: Int
+    var rent: Int = 0
 
     @NotNull
-    var available: Int
-
-    var isForRent: Boolean
-        get() = if (isPublicSpace) {
-            false
-        } else field
+    var available: Int = 0
 
     var isPublicSpace: Boolean = false
         get() = !(roomType == RoomType.BEDROOM || roomType == RoomType.MASTER)
+
+    constructor(): super() {}
 
     constructor(room: Room): super(room.id, room.version) {
         this.suite = room.suite
@@ -40,17 +37,15 @@ class Room : AbstractPersistentObject {
         this.roomType = room.roomType
         this.rent = room.rent
         this.available = room.available
-        this.isForRent = room.isForRent
     }
 
-    constructor(suite: Suite, name: String, comment: String = "", roomType: RoomType, rent: Int, available: Int = 1, isForRent: Boolean): super() {
+    constructor(suite: Suite, name: String, comment: String = "", roomType: RoomType, rent: Int, available: Int = 1): super() {
         this.suite = suite
         this.name = name
         this.comment = comment
         this.roomType = roomType
         this.rent = rent
         this.available = available
-        this.isForRent = isForRent
     }
 
     fun copy(room: Room) {
@@ -60,6 +55,5 @@ class Room : AbstractPersistentObject {
         this.roomType = room.roomType
         this.rent = room.rent
         this.available = room.available
-        this.isForRent = room.isForRent
     }
 }

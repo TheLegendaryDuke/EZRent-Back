@@ -11,25 +11,27 @@ import java.util.HashSet
 class Building : AbstractPersistentObject {
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "city", nullable = false)
-    val city: City
+    var city: City? = null
 
-    val address:String
+    var address:String = ""
 
-    val postalCode: String
+    var postalCode: String = ""
 
     @OneToMany(mappedBy = "building", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
-    val suites: Set<Suite>
+    var suites: Set<Suite> = HashSet()
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "owner", nullable = false)
-    val owner: User
+    var owner: User? = null
 
-    val longitude: Double
+    var longitude: Double = 0.0
 
-    val latitude: Double
+    var latitude: Double = 0.0
 
-    val verified: Boolean
+    var verified: Boolean = false
+
+    constructor() : super() {}
 
     constructor(city: City, address:String, postalCode: String, suites: Set<Suite>, owner: User, longitude: Double, latitude: Double, verified: Boolean) : super() {
         this.city = city

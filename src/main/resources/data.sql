@@ -9,3 +9,9 @@ INSERT INTO public.app_user VALUES ('34ccf681-b2c2-48e2-a3c9-e81ed326bd96', 0, '
 INSERT INTO public.app_user VALUES ('ecb47264-3431-411a-9837-0feda37bd411', 0, 'ryan@mail.com', '2018-07-30 20:52:35.655-04', 'ryan', '$2a$10$RQ6ZAl2irPILtj7xaC77x.bGsQl1aNfoQtTu7z.hxPUWCKbrwsKtK');
 INSERT INTO public.app_user VALUES ('5769037d-b5db-4989-b2f4-9029433b0b9f', 0, 'aaron@mail.com', '2018-07-30 20:53:14.282-04', 'aaron', '$2a$10$rgWiCjmoXn5YpmBhpihC.uN7rnw0K5wN0t/N7JNqqOTpoAY5umnua');
 INSERT INTO public.app_user VALUES ('7499b69a-1759-4057-bd0a-2b55e060ddf3', 0, 'admin@mail.com', '2018-07-30 20:53:43.018-04', 'admin', '$2a$10$lYAJ5kFAv.rJ2o3K4XsLp.IG5SKlJZfZB4xT.SpIlwLIw5y.Odpjy');
+
+INSERT INTO public.building VALUES ('53052582-5a09-429a-adde-7e2d9ef2ef92', 0, '30 Grand Trunk Cres', 43.642346, -79.382832, 'M5J3A4', true, '1', '5769037d-b5db-4989-b2f4-9029433b0b9f');
+
+INSERT INTO public.suite VALUES ('1d941ea0-9b5a-11e8-98d0-529269fb1459', 0, 2, '10', false, '100', 1000, '53052582-5a09-429a-adde-7e2d9ef2ef92');
+
+INSERT INTO public.room VALUES ('4ffc0830-9b5a-11e8-98d0-529269fb1459', 0, 2, 'some comment', true, 'bathroom 1', 0, 'WASHROOM', 1);
