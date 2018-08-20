@@ -15,7 +15,7 @@ Environment setup:
 3. Compile and run the application:
   * Start redis-server (instructions available at https://redis.io)
   * Import the program by opening pom.xml and then intellij should be smart enough to figure out how to run it
-  * Or, in the root directory, run the following command (change the name of the jar file to match the version in pom.xml):
+  * Or, in the root directory, run the following command (change the name of the jar file to match the version in build.gradle):
   ```
   gradle bootRun
   ```
