@@ -14,4 +14,4 @@ INSERT INTO public.building VALUES ('53052582-5a09-429a-adde-7e2d9ef2ef92', 0, '
 
 INSERT INTO public.suite VALUES ('1d941ea0-9b5a-11e8-98d0-529269fb1459', 0, 2, '10', false, '100', 1000, '53052582-5a09-429a-adde-7e2d9ef2ef92');
 
-INSERT INTO public.room VALUES ('4ffc0830-9b5a-11e8-98d0-529269fb1459', 0, 2, 'some comment', true, 'bathroom 1', 0, 'WASHROOM', 1);
+INSERT INTO public.room VALUES ('4ffc0830-9b5a-11e8-98d0-529269fb1459', 0, 2, 'some comment', true, 'bathroom 1', 0, 'WASHROOM', '1d941ea0-9b5a-11e8-98d0-529269fb1459');

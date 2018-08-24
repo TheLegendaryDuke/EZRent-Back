@@ -19,26 +19,19 @@ import javax.servlet.http.HttpSession
 
 @Controller
 @RequestMapping("/register")
-class RegisterController {
-
-    @Value("\${application.URL}")
-    private val applicationURL: String? = null
-
-    @Autowired
-    private val httpSession: HttpSession? = null
-
-    @Autowired
-    internal var connectionFactoryLocator: ConnectionFactoryLocator? = null
-
-    @Autowired
-    private val usersConnectionRepository: UsersConnectionRepository? = null
+class RegisterController @Autowired constructor(
+        @Value("\${application.URL}") private val applicationURL: String,
+        private val httpSession: HttpSession,
+        private var connectionFactoryLocator: ConnectionFactoryLocator,
+        private val usersConnectionRepository: UsersConnectionRepository
+){
 
     @GetMapping
     fun postSocial(request: WebRequest): RedirectView {
         val providerSignInUtils = ProviderSignInUtils(connectionFactoryLocator, usersConnectionRepository)
 
         val connection = providerSignInUtils.getConnectionFromSession(request)
-        val redirectView = RedirectView(applicationURL!! + "/registerWithSocial")
+        val redirectView = RedirectView(applicationURL + "/registerWithSocial")
 
         if (connection != null) {
             if(connection.api is Facebook) {

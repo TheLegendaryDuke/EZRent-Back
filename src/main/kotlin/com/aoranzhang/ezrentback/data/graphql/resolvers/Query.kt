@@ -15,25 +15,19 @@ import org.springframework.stereotype.Component
 import javax.servlet.http.HttpSession
 
 @Component
-class Query : GraphQLQueryResolver {
+class Query @Autowired constructor(
+        private val httpSession: HttpSession,
+        private val userService: UserService,
+        private val cityService: CityService,
+        private val buildingService: BuildingService
+) : GraphQLQueryResolver {
+
     val LOGGER = LoggerFactory.getLogger(Query::class.java)!!
 
-    @Autowired
-    private val httpSession: HttpSession? = null
-
-    @Autowired
-    private val userService: UserService? = null
-
-    @Autowired
-    private val cityService: CityService? = null
-
-    @Autowired
-    private val buildingService: BuildingService? = null
-
     fun user(): User? {
-        val user = httpSession!!.getAttribute("userEmail") as String?
+        val user = httpSession.getAttribute("userEmail") as String?
         return if (user != null && user.isNotEmpty()) {
-            userService!!.getUserByEmail(user)
+            userService.getUserByEmail(user)
         } else {
             LOGGER.debug("There is no user info in session storage")
             null
@@ -41,22 +35,22 @@ class Query : GraphQLQueryResolver {
     }
 
     fun cities(): Set<City> {
-        return cityService!!.allCities
+        return cityService.allCities
     }
 
     fun buildings(city: String): Set<Building>? {
-        val nullableCity = cityService!!.findCityByName(city)
+        val nullableCity = cityService.findCityByName(city)
         return if (nullableCity == null) {
             null
         }else {
-            return buildingService!!.listByCity(nullableCity)
+            return buildingService.listByCity(nullableCity)
         }
     }
 
     fun properties(email: String): Set<Building> {
-        val user = userService!!.getUserByEmail(email)
+        val user = userService.getUserByEmail(email)
         return if (user != null) {
-            buildingService!!.listByOwner(user)
+            buildingService.listByOwner(user)
         }else {
             HashSet()
         }
