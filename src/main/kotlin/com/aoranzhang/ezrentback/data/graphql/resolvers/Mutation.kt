@@ -25,31 +25,19 @@ import java.util.Date
 import java.util.HashSet
 
 @Component
-class Mutation : GraphQLMutationResolver {
-    @Autowired
-    private lateinit var userService: UserService
-
-    @Autowired
-    private lateinit var roomService: RoomService
-
-    @Autowired
-    private lateinit var suiteService: SuiteService
-
-    @Autowired
-    private lateinit var buildingService: BuildingService
-
-    @Autowired
-    internal var connectionFactoryLocator: ConnectionFactoryLocator? = null
-
-    @Autowired
-    private val usersConnectionRepository: UsersConnectionRepository? = null
-
-    @Autowired
-    private val httpSession: HttpSession? = null
+class Mutation @Autowired constructor(
+        private val userService: UserService,
+        private val roomService: RoomService,
+        private val suiteService: SuiteService,
+        private val buildingService: BuildingService,
+        private val connectionFactoryLocator: ConnectionFactoryLocator,
+        private val usersConnectionRepository: UsersConnectionRepository,
+        private val httpSession: HttpSession
+) : GraphQLMutationResolver {
 
     fun register(email: String, username: String, password: String): User? {
 
-        val existing = userService!!.getUserByEmail(email)
+        val existing = userService.getUserByEmail(email)
         if (existing != null) {
             return null
         }
@@ -66,7 +54,7 @@ class Mutation : GraphQLMutationResolver {
 
             providerSignInUtils.doPostSignUp(user.email, webRequest)
 
-            httpSession!!.setAttribute("userEmail", user.email)
+            httpSession.setAttribute("userEmail", user.email)
             httpSession.setAttribute("userName", user.name)
         } catch (e: Exception) {
             return null

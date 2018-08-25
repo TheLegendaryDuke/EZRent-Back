@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession
 import java.io.IOException
 
 class RestAuthenticationSuccessHandler(private val httpSession: HttpSession, private val userService: UserService) : AuthenticationSuccessHandler {
+
     @Throws(ServletException::class, IOException::class)
     override fun onAuthenticationSuccess(
             request: HttpServletRequest,
