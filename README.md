@@ -14,9 +14,26 @@ Environment setup:
   * Grant the role privileges by right-clicking the role just created > Properties... > Privileges > Set fields to "Yes"
 3. Compile and run the application:
   * Start redis-server (instructions available at https://redis.io)
-  * Import the program by opening pom.xml and then intellij should be smart enough to figure out how to run it
-  * Or, in the root directory, run the following command (change the name of the jar file to match the version in build.gradle):
-  ```
-  gradle bootRun
-  ```
-  * Check that the application is started by going to http://localhost:8080/graphiql
+  * Run `docker build -t ezrent-back .` in the root directory
+  * After the build is finished, execute the following command to run the image (remember to fill in the missing fields):
+    ```
+        docker run --name ezrent-back -p 8080:8080 \
+         -e redis_host=localhost \
+         -e redis_port=6379 \
+         -e redis_password= \
+         -e sql_host=jdbc:postgresql://localhost:5432/ezrent
+         -e sql_username= \
+         -e sql_password= \
+         -e facebook_id= \
+         -e facebook_secret = \
+         -e twitter_id= \
+         -e twitter_secret= \
+         -e google_id= \
+         -e google_secret= \
+         -e google_api_key= \
+         -e frontend=localhost:3000 \
+         ezrent-back
+    ```
+    This mimics the production behavior but takes longer. Alternatively, the application can also be started by setting the corresponding environment variables in your IDE and run using `gradle bootRun` command.
+    When running on MAC, replace `localhost` by `host.docker.internal`
+  * Check that the application is started by going to `http://localhost:8080/graphiql`

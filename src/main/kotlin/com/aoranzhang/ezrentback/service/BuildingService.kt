@@ -20,7 +20,7 @@ class BuildingService {
     private val userRepository: UserRepository? = null
 
     fun getById(id: String): Building? {
-        return JavaToKotlin.OptionalToNullable(buildingRepository!!.findById(id))
+        return JavaToKotlin.OptionalToNullable(buildingRepository.findById(id))
     }
 
     @Transactional
