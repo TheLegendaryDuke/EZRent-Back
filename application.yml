@@ -1,19 +1,43 @@
 server:
     port: 8080
 
-spring.profiles.active: development
+spring:
+    jpa:
+        database: POSTGRESQL
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+    queries:
+        users-query: select email, password, TRUE from app_user where email=?
+        authorities-query: SELECT email, 'ROLE_USER' FROM app_user WHERE email=?
+    session:
+        store-type: redis
+    redis:
+        host: ${redis_host}
+        port: ${redis_port}
+        password: ${redis_password}
+    datasource:
+        platform: postgres
+        driverClassName: org.postgresql.Driver
+        url: ${sql_host}
+        username: ${sql_username}
+        password: ${sql_password}
+
+facebook:
+    app-id: ${facebook_id}
+    app-secret: ${facebook_secret}
+twitter:
+    app-id: ${twitter_id}
+    app-secret: ${twitter_secret}
+google:
+    app-id: ${google_id}
+    app-secret: ${google_secret}
+    api-key: ${google_api_key}
+
+application.URL: ${frontend}
 
 graphiql:
     mapping: /graphiql
     endpoint: /graphql
     enabled: true
     pageTitle: GraphiQL
-
----
-
-spring:
-    profiles: development
----
-
-spring:
-    profiles: production
