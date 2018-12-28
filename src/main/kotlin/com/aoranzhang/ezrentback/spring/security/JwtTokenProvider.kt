@@ -42,6 +42,7 @@ class JwtTokenProvider {
 
         val claims = Jwts.claims().setSubject(username)
         claims.put("auth", roles.stream().map { s -> SimpleGrantedAuthority(s.getAuthority()) }.filter({t -> t != null }).collect(Collectors.toList()))
+        claims.put("name", userService!!.getUserByEmail(username)!!.name)
 
         val now = Date()
         val validity = Date(now.getTime() + validityInMilliseconds)
