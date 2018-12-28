@@ -34,6 +34,8 @@ google:
     app-secret: ${google_secret}
     api-key: ${google_api_key}
 
+jwt-secret: ${jwt_secret}
+
 application.URL: ${frontend}
 
 graphiql:

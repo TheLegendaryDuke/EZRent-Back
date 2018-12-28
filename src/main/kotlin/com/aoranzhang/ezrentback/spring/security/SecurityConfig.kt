@@ -1,64 +1,53 @@
 package com.aoranzhang.ezrentback.spring.security
 
-import com.aoranzhang.ezrentback.service.UserService
-import com.aoranzhang.ezrentback.spring.social.RestProviderSignInController
-import com.aoranzhang.ezrentback.spring.social.SocialSignInAdapter
 import com.google.common.collect.ImmutableList
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
-import org.springframework.core.env.Environment
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.encrypt.Encryptors
-import org.springframework.security.crypto.encrypt.TextEncryptor
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.social.connect.ConnectionFactoryLocator
 import org.springframework.social.connect.UsersConnectionRepository
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository
-import org.springframework.social.connect.web.ProviderSignInController
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
-import javax.servlet.http.HttpSession
 import javax.sql.DataSource
 
 @EnableWebSecurity
 class SecurityConfig : WebSecurityConfigurerAdapter() {
 
-    @Autowired
-    private val userService: UserService? = null
+//    @Autowired
+//    private lateinit var userService: UserService
+//
+//    @Autowired
+//    private lateinit var bCryptPasswordEncoder: BCryptPasswordEncoder
 
     @Autowired
-    private val bCryptPasswordEncoder: BCryptPasswordEncoder? = null
+    private lateinit var dataSource: DataSource
+
+//    @Value("\${spring.queries.users-query}")
+//    private lateinit var usersQuery: String
+//
+//    @Value("\${spring.queries.authorities-query}")
+//    private lateinit var authoritiesQuery: String
+//
+//    @Value("\${application.URL}")
+//    private lateinit var applicationURL: String
 
     @Autowired
-    private val dataSource: DataSource? = null
+    private lateinit var connectionFactoryLocator: ConnectionFactoryLocator
 
-    @Value("\${spring.queries.users-query}")
-    private val usersQuery: String? = null
-
-    @Value("\${spring.queries.authorities-query}")
-    private val authoritiesQuery: String? = null
-
-    @Value("\${application.URL}")
-    private val applicationURL: String? = null
+//    @Autowired
+//    private lateinit var usersConnectionRepository: UsersConnectionRepository
 
     @Autowired
-    private val connectionFactoryLocator: ConnectionFactoryLocator? = null
-
-    @Autowired
-    private val usersConnectionRepository: UsersConnectionRepository? = null
-
-    @Autowired
-    private val httpSession: HttpSession? = null
+    private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
@@ -70,47 +59,31 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .csrf().disable()
                 .cors()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/login", "/login/**", "/register/**", "/graphiql/**", "/graphql/**", "/user", "/vendor/**").permitAll()
-                .anyRequest().denyAll()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .successHandler(RestAuthenticationSuccessHandler(httpSession!!, userService!!))
-                .failureHandler(SimpleUrlAuthenticationFailureHandler())
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .permitAll()
-                .and().logout().logoutSuccessUrl("/")
-                .logoutSuccessHandler(handler)
-                .logoutRequestMatcher(AntPathRequestMatcher("/logout"))
+                .authorizeRequests()
+                .antMatchers("/login", "/login/**", "/register/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().accessDeniedPage("/login")
+                .and()
+                .apply(JwtTokenFilterConfigurer(jwtTokenProvider))
     }
 
-    @Throws(Exception::class)
-    override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth!!.jdbcAuthentication()
-                .usersByUsernameQuery(usersQuery)
-                .authoritiesByUsernameQuery(authoritiesQuery)
-                .dataSource(dataSource)
-                .passwordEncoder(bCryptPasswordEncoder)
-    }
+//    @Throws(Exception::class)
+//    override fun configure(auth: AuthenticationManagerBuilder?) {
+//        auth!!.jdbcAuthentication()
+//                .usersByUsernameQuery(usersQuery)
+//                .authoritiesByUsernameQuery(authoritiesQuery)
+//                .dataSource(dataSource)
+//                .passwordEncoder(bCryptPasswordEncoder)
+//    }
 
     @Bean
     @Primary
     fun usersConnectionRepository(): UsersConnectionRepository {
         val textEncryptor = Encryptors.noOpText()
         return JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, textEncryptor)
-    }
-
-    @Bean
-    fun providerSignInController(): ProviderSignInController {
-        val providerSignInController = RestProviderSignInController(
-                connectionFactoryLocator,
-                usersConnectionRepository,
-                SocialSignInAdapter(userService!!, httpSession!!))
-        providerSignInController.setSignUpUrl("/register")
-        providerSignInController.setPostSignInUrl(applicationURL)
-        return providerSignInController
     }
 
     @Bean

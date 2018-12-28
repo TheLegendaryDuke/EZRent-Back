@@ -21,7 +21,6 @@ import javax.servlet.http.HttpSession
 @RequestMapping("/register")
 class RegisterController @Autowired constructor(
         @Value("\${application.URL}") private val applicationURL: String,
-        private val httpSession: HttpSession,
         private var connectionFactoryLocator: ConnectionFactoryLocator,
         private val usersConnectionRepository: UsersConnectionRepository
 ){

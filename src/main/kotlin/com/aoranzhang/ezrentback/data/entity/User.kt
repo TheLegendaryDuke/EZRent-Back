@@ -27,6 +27,8 @@ class User : AbstractPersistentObject {
     @JsonIgnore
     var buildings: Set<Building> = HashSet()
 
+    var role: Role = Role.ROLE_CLIENT
+
     constructor(): super() {}
 
     constructor(id: String, version: Int, name: String, email: String, password: String, lastLogin: Date, buildings: Set<Building>) : super(id, version) {
