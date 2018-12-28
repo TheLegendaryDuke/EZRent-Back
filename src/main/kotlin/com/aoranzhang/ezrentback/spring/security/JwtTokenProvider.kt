@@ -2,11 +2,9 @@ package com.aoranzhang.ezrentback.spring.security
 
 import com.aoranzhang.ezrentback.data.entity.Role
 import com.aoranzhang.ezrentback.service.UserService
-import com.google.common.collect.ImmutableList
 import io.jsonwebtoken.JwtException
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.userdetails.UserDetails
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import java.util.stream.Collectors
@@ -40,7 +38,7 @@ class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey!!.toByteArray())
     }
 
-    fun createToken(username: String, roles: List<Role>): String {
+    fun createToken(username: String, roles: Set<Role>): String {
 
         val claims = Jwts.claims().setSubject(username)
         claims.put("auth", roles.stream().map { s -> SimpleGrantedAuthority(s.getAuthority()) }.filter({t -> t != null }).collect(Collectors.toList()))
@@ -58,7 +56,7 @@ class JwtTokenProvider {
 
     fun getAuthentication(token: String): Authentication {
         val user = userService!!.getUserByEmail(getUsername(token))!!
-        return UsernamePasswordAuthenticationToken(user, user.password, ImmutableList.of(user.role))
+        return UsernamePasswordAuthenticationToken(user, user.password, user.roles)
     }
 
     fun getUsername(token: String): String {

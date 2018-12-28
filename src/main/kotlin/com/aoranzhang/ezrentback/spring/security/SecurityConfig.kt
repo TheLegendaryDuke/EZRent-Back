@@ -3,7 +3,9 @@ package com.aoranzhang.ezrentback.spring.security
 import com.google.common.collect.ImmutableList
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -19,24 +21,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 import javax.sql.DataSource
 
-@EnableWebSecurity
+@Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig : WebSecurityConfigurerAdapter() {
-
-//    @Autowired
-//    private lateinit var userService: UserService
-//
-//    @Autowired
-//    private lateinit var bCryptPasswordEncoder: BCryptPasswordEncoder
 
     @Autowired
     private lateinit var dataSource: DataSource
 
-//    @Value("\${spring.queries.users-query}")
-//    private lateinit var usersQuery: String
-//
-//    @Value("\${spring.queries.authorities-query}")
-//    private lateinit var authoritiesQuery: String
-//
 //    @Value("\${application.URL}")
 //    private lateinit var applicationURL: String
 

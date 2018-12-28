@@ -2,18 +2,14 @@ package com.aoranzhang.ezrentback
 
 //import com.cloudinary.Cloudinary
 //import com.cloudinary.utils.ObjectUtils
-import com.google.maps.GeoApiContext
 //import com.pubnub.api.PNConfiguration
 //import com.pubnub.api.PubNub
+import com.google.maps.GeoApiContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Profile
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.session.data.redis.config.ConfigureRedisAction
-import org.springframework.util.ObjectUtils
 
 @SpringBootApplication
 class EzrentBackApplication {
@@ -54,11 +50,6 @@ class EzrentBackApplication {
         @JvmStatic
         fun main(args: Array<String>) {
             SpringApplication.run(EzrentBackApplication::class.java, *args)
-        }
-
-        @Bean
-        fun configureRedisAction(): ConfigureRedisAction {
-            return ConfigureRedisAction.NO_OP
         }
     }
 }

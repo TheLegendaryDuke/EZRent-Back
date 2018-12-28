@@ -10,12 +10,6 @@ spring:
     queries:
         users-query: select email, password, TRUE from app_user where email=?
         authorities-query: SELECT email, 'ROLE_USER' FROM app_user WHERE email=?
-    session:
-        store-type: redis
-    redis:
-        host: ${redis_host}
-        port: ${redis_port}
-        password: ${redis_password}
     datasource:
         platform: postgres
         driverClassName: org.postgresql.Driver

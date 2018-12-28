@@ -1,28 +1,31 @@
 package com.aoranzhang.ezrentback.spring.security
 
+import com.aoranzhang.ezrentback.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.social.connect.Connection
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.social.connect.ConnectionFactoryLocator
-import org.springframework.social.connect.UserProfile
 import org.springframework.social.connect.UsersConnectionRepository
 import org.springframework.social.connect.web.ProviderSignInUtils
 import org.springframework.social.facebook.api.Facebook
 import org.springframework.social.facebook.api.User
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.view.RedirectView
 
-import javax.servlet.http.HttpSession
-
-@Controller
+@RestController
 @RequestMapping("/register")
 class RegisterController @Autowired constructor(
         @Value("\${application.URL}") private val applicationURL: String,
         private var connectionFactoryLocator: ConnectionFactoryLocator,
-        private val usersConnectionRepository: UsersConnectionRepository
+        private val usersConnectionRepository: UsersConnectionRepository,
+        private val userService: UserService,
+        private val jwtTokenProvider: JwtTokenProvider,
+        private val passwordEncoder: BCryptPasswordEncoder
 ){
 
     @GetMapping
@@ -45,5 +48,15 @@ class RegisterController @Autowired constructor(
         }
 
         return redirectView
+    }
+
+    @PostMapping
+    fun register(user: com.aoranzhang.ezrentback.data.entity.User) : String {
+        if (userService.getUserByEmail(user.email) == null) {
+            userService.saveUser(user)
+            return jwtTokenProvider.createToken(user.email, user.roles)
+        }else {
+            return "Error: this email is already taken"
+        }
     }
 }
