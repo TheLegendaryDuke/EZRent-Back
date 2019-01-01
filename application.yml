@@ -1,5 +1,13 @@
 server:
-    port: 8080
+    port: 8443
+    ssl:
+        key-store-type: PKCS12
+        key-store: classpath:keystore.p12
+        key-store-password: 11235813
+        key-alias: localhost
+
+security:
+    require-ssl: true
 
 spring:
     jpa:

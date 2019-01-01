@@ -1,10 +1,14 @@
 package com.aoranzhang.ezrentback.spring.security
 
+import com.aoranzhang.ezrentback.service.UserService
+import com.aoranzhang.ezrentback.spring.social.SocialSignInAdapter
 import com.google.common.collect.ImmutableList
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -15,6 +19,7 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import org.springframework.social.connect.ConnectionFactoryLocator
 import org.springframework.social.connect.UsersConnectionRepository
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository
+import org.springframework.social.connect.web.ProviderSignInController
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -28,14 +33,17 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
     private lateinit var dataSource: DataSource
 
-//    @Value("\${application.URL}")
-//    private lateinit var applicationURL: String
+    @Value("\${application.URL}")
+    private lateinit var applicationURL: String
+
+    @Autowired
+    private lateinit var userService: UserService
 
     @Autowired
     private lateinit var connectionFactoryLocator: ConnectionFactoryLocator
 
-//    @Autowired
-//    private lateinit var usersConnectionRepository: UsersConnectionRepository
+    @Autowired
+    private lateinit var usersConnectionRepository: UsersConnectionRepository
 
     @Autowired
     private lateinit var jwtTokenProvider: JwtTokenProvider
@@ -53,22 +61,24 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login", "/login/**", "/register/**").permitAll()
-                .anyRequest().authenticated()
+//                .antMatchers("/login", "/login/**", "/register/**", "/signin/**").permitAll()
+                .anyRequest().permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/login")
                 .and()
                 .apply(JwtTokenFilterConfigurer(jwtTokenProvider))
     }
 
-//    @Throws(Exception::class)
-//    override fun configure(auth: AuthenticationManagerBuilder?) {
-//        auth!!.jdbcAuthentication()
-//                .usersByUsernameQuery(usersQuery)
-//                .authoritiesByUsernameQuery(authoritiesQuery)
-//                .dataSource(dataSource)
-//                .passwordEncoder(bCryptPasswordEncoder)
-//    }
+    @Bean
+    fun providerSignInController(): ProviderSignInController {
+        val providerSignInController = ProviderSignInController(
+                connectionFactoryLocator,
+                usersConnectionRepository,
+                SocialSignInAdapter(userService))
+        providerSignInController.setSignUpUrl("/register")
+        providerSignInController.setPostSignInUrl(applicationURL)
+        return providerSignInController
+    }
 
     @Bean
     @Primary

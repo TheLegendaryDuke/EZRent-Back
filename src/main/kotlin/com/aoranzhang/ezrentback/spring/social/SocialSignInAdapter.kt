@@ -12,14 +12,12 @@ import org.springframework.web.context.request.NativeWebRequest
 import javax.servlet.http.HttpSession
 import java.util.HashSet
 
-class SocialSignInAdapter(private val userService: UserService, private val httpSession: HttpSession) : SignInAdapter {
+class SocialSignInAdapter(private val userService: UserService) : SignInAdapter {
 
     override fun signIn(localUserId: String, connection: org.springframework.social.connect.Connection<*>, request: NativeWebRequest): String? {
         val user = userService.getUserByEmail(localUserId)
 
         SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(localUserId, user?.password, HashSet<GrantedAuthority>())
-        httpSession.setAttribute("userEmail", user?.email)
-        httpSession.setAttribute("userName", user?.name)
 
         return null
     }
