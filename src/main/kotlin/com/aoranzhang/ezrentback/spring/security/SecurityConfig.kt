@@ -51,9 +51,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
 
-        val handler = SimpleUrlLogoutSuccessHandler()
-        handler.setUseReferer(true)
-
         http
                 .csrf().disable()
                 .cors()
@@ -61,7 +58,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/login", "/login/**", "/register/**", "/signin/**").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/login")
@@ -90,7 +86,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = ImmutableList.of("*")
+        configuration.allowedOrigins = ImmutableList.of("https://localhost:3000")
         configuration.allowedMethods = ImmutableList.of("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH")
         // setAllowCredentials(true) is important, otherwise:

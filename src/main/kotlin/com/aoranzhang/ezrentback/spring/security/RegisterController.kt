@@ -33,7 +33,7 @@ class RegisterController @Autowired constructor(
         val providerSignInUtils = ProviderSignInUtils(connectionFactoryLocator, usersConnectionRepository)
 
         val connection = providerSignInUtils.getConnectionFromSession(request)
-        val redirectView = RedirectView(applicationURL + "/registerWithSocial")
+        val redirectView = RedirectView("$applicationURL/registerWithSocial")
 
         if (connection != null) {
             if(connection.api is Facebook) {
@@ -48,15 +48,5 @@ class RegisterController @Autowired constructor(
         }
 
         return redirectView
-    }
-
-    @PostMapping
-    fun register(user: com.aoranzhang.ezrentback.data.entity.User) : String {
-        if (userService.getUserByEmail(user.email) == null) {
-            userService.saveUser(user)
-            return jwtTokenProvider.createToken(user.email, user.roles)
-        }else {
-            return "Error: this email is already taken"
-        }
     }
 }

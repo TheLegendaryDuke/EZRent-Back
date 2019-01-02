@@ -1,12 +1,11 @@
 type Query {
     cities: [City!]!
-    user: User
     buildings(city: String!): [Building!]!
     properties(email: String!): [Building!]!
 }
 
 type Mutation {
-    register(email: String!, username: String!, password: String!): User
+    register(email: String!, username: String!, password: String!): String
     updateRoom(room: RoomInput!): Room
     updateSuite(suite: SuiteInput!): Suite
     updateBuilding(building: BuildingInput!): Building

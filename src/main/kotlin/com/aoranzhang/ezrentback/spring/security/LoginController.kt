@@ -1,9 +1,12 @@
 package com.aoranzhang.ezrentback.spring.security
 
+import com.aoranzhang.ezrentback.data.entity.User
 import com.aoranzhang.ezrentback.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -27,5 +30,11 @@ class LoginController @Autowired constructor(
         }catch (e : Exception) {
             return "login failed"
         }
+    }
+
+    @GetMapping
+    fun getLoggedIn(): String {
+        val principal = SecurityContextHolder.getContext().authentication.principal
+        return if (principal is User) principal.name else ""
     }
 }
