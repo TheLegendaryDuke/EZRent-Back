@@ -7,27 +7,40 @@ import org.springframework.context.annotation.Primary
 
 import javax.sql.DataSource
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.core.env.Environment
 import org.springframework.jdbc.datasource.DriverManagerDataSource
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2
+import java.util.logging.Logger
 
 
 @Configuration
 class DatabaseConfig {
-    @Autowired
-    lateinit var env : Environment
+    val logger = Logger.getLogger(DatabaseConfig::class.simpleName)
+
+    @Value("\${spring.datasource.driverClassName}")
+    private lateinit var driverClassName: String
+
+    @Value("\${spring.datasource.url}")
+    private lateinit var url: String
+
+    @Value("\${spring.datasource.username}")
+    private lateinit var username: String
+
+    @Value("\${spring.datasource.password}")
+    private lateinit var password: String
 
     @Bean
     @Primary
     @Profile("!test")
     fun dataSource() : DataSource{
         val dataSource = DriverManagerDataSource()
-        dataSource.setDriverClassName(env.getProperty("spring.datasource.driverClassName")!!)
-        dataSource.url = env.getProperty("spring.datasource.url")
-        dataSource.username = env.getProperty("spring.datasource.username")
-        dataSource.password = env.getProperty("spring.datasource.password")
+        dataSource.setDriverClassName(driverClassName)
+        dataSource.url = url
+        dataSource.username = username
+        dataSource.password = password
 
         return dataSource
     }

@@ -43,9 +43,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     private lateinit var connectionFactoryLocator: ConnectionFactoryLocator
 
     @Autowired
-    private lateinit var usersConnectionRepository: UsersConnectionRepository
-
-    @Autowired
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Throws(Exception::class)
@@ -69,7 +66,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     fun providerSignInController(): ProviderSignInController {
         val providerSignInController = ProviderSignInController(
                 connectionFactoryLocator,
-                usersConnectionRepository,
+                usersConnectionRepository(),
                 SocialSignInAdapter(userService))
         providerSignInController.setSignUpUrl("/register")
         providerSignInController.setPostSignInUrl(applicationURL)
