@@ -83,7 +83,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = ImmutableList.of("https://localhost:3000")
+        configuration.allowedOrigins = ImmutableList.of("http://localhost:3000","https://localhost:3000", "http://ezrent.aoranzhang.com", "https://ezrent.aoranzhang.com")
         configuration.allowedMethods = ImmutableList.of("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH")
         // setAllowCredentials(true) is important, otherwise:

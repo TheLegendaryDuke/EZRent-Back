@@ -1,13 +1,13 @@
 server:
     port: 8443
-    ssl:
-        key-store-type: PKCS12
-        key-store: classpath:dev.p12
-        key-store-password: 11235813
-        key-alias: ${key_alias}
+#    ssl:
+#        key-store-type: PKCS12
+#        key-store: classpath:dev.p12
+#        key-store-password: 11235813
+#        key-alias: ${key_alias}
 
-security:
-    require-ssl: true
+#security:
+#    require-ssl: false
 
 spring:
     jpa:
