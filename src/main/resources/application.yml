@@ -1,21 +1,21 @@
 server:
-    port: 8080
+    port: 8443
+    servlet:
+        context-path: /api
+    tomcat:
+        use-relative-redirects: true
 
 spring:
     jpa:
         database: POSTGRESQL
         hibernate:
-            ddl-auto: update
+            ddl-auto: create
         show-sql: true
-    queries:
-        users-query: select email, password, TRUE from app_user where email=?
-        authorities-query: SELECT email, 'ROLE_USER' FROM app_user WHERE email=?
-    session:
-        store-type: redis
-    redis:
-        host: ${redis_host}
-        port: ${redis_port}
-        password: ${redis_password}
+        properties:
+            hibernate:
+                temp:
+                    use_jdbc_metadata_defaults: false
+        database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     datasource:
         platform: postgres
         driverClassName: org.postgresql.Driver
@@ -34,10 +34,12 @@ google:
     app-secret: ${google_secret}
     api-key: ${google_api_key}
 
+jwt-secret: ${jwt_secret}
+
 application.URL: ${frontend}
 
 graphiql:
     mapping: /graphiql
-    endpoint: /graphql
+    endpoint: /api/graphql
     enabled: true
     pageTitle: GraphiQL

@@ -1,5 +1,6 @@
 package com.aoranzhang.ezrentback.data.entity
 
+import com.aoranzhang.ezrentback.data.EnumListConverter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.common.collect.ImmutableSet
 
@@ -26,6 +27,10 @@ class User : AbstractPersistentObject {
     @OneToMany(mappedBy = "owner", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
     var buildings: Set<Building> = HashSet()
+
+    @Column
+    @Convert(converter = EnumListConverter::class)
+    var roles: Set<Role> = ImmutableSet.of(Role.ROLE_CLIENT)
 
     constructor(): super() {}
 
