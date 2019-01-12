@@ -70,6 +70,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 SocialSignInAdapter(userService))
         providerSignInController.setSignUpUrl("/register")
         providerSignInController.setPostSignInUrl(applicationURL)
+        providerSignInController.setApplicationUrl(applicationURL+"/api")
         return providerSignInController
     }
 
